@@ -1,8 +1,8 @@
 # Launch Radar — token-radar-01
 
-![snapshot](https://img.shields.io/badge/snapshot-2026--11--14-blue)
-![rows](https://img.shields.io/badge/board-198%20rows-green)
-![model](https://img.shields.io/badge/model-radar--2-orange)
+[![token-radar-01](https://make.fun/badge/token-radar-01.svg)](https://make.fun/bounty/token-radar-01)
+[![rank](https://make.fun/badge/token-radar-01/DESTINYMEDIA1/token-radar-20261120/rank.svg)](https://make.fun/bounty/token-radar-01)
+[![reward](https://make.fun/badge/token-radar-01/DESTINYMEDIA1/token-radar-20261120/reward.svg)](https://make.fun/bounty/token-radar-01)
 
 Build the best token launch radar: rank every pre-token protocol in the sealed DefiLlama snapshot by what its token would be worth if it launched, and show what farming it would actually pay.
 
