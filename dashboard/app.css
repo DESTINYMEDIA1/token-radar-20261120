@@ -47,6 +47,19 @@ td .sub2 { display: block; font-size: 11.5px; color: var(--muted); }
 .verdict.SKIP { background: #fbe9e7; color: var(--red); }
 .tier { font-size: 11px; color: var(--muted); }
 .hidden { display: none; }
+body.detail-mode .kpis, body.detail-mode .integrity, body.detail-mode .accounting,
+body.detail-mode .filters, body.detail-mode .model-badge, body.detail-mode .sub { display: none; }
+body.detail-mode h1 { font-size: 28px; margin-bottom: 0; }
+body.detail-mode .mast { padding-top: 12px; }
+body.detail-mode #detailBody { padding: 12px 16px; }
+body.detail-mode #detailBody h3 { font-size: 22px; }
+body.detail-mode .dgrid { gap: 14px; }
+body.detail-mode .dgrid table { font-size: 12.5px; }
+body.detail-mode .dgrid th, body.detail-mode .dgrid td { padding: 5px 7px; }
+body.detail-mode ol.plan { font-size: 12.5px; }
+body.detail-mode ol.plan li { margin-bottom: 4px; }
+#detailBody table td { white-space: normal; }
+.dgrid > div { min-width: 0; overflow-wrap: anywhere; }
 #detailBody { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; }
 #detailBody h3 { margin: 0 0 2px; font-size: 26px; font-family: Georgia, serif; }
 #detailBody .dsub { color: var(--muted); font-size: 13.5px; margin-bottom: 14px; }

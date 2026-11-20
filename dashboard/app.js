@@ -134,6 +134,7 @@
   function showDetail(slug) {
     var r = R.rows.find(function (x) { return x.slug === slug; });
     if (!r) return;
+    document.body.classList.add('detail-mode');
     $('boardWrap').classList.add('hidden');
     $('detail').classList.remove('hidden');
     $('detailTitle').textContent = '#' + r.rank + ' ' + r.name + ' — dossier';
@@ -141,15 +142,18 @@
     var net = dep === 1000 ? r.net_1k : r.net_10k;
     var hour = dep === 1000 ? r.net_hour_1k : Math.round((r.net_10k / r.hours) * 100) / 100;
     var slice = 0.07 * r.value_if_launches * (dep / r.tvl_usd);
+    var chainsShort = r.chains.slice(0, 3).join(', ') + (r.chains.length > 3 ? ' +' + (r.chains.length - 3) + ' more' : '');
+    var curveVal = Math.pow(10, 7.2341 + 0.5782 * Math.log10(r.tvl_usd / 1e8));
+    var catMult = Math.pow(10, r.cat_offset);
     var rows = [
       ['TVL', money2(r.tvl_usd) + ' (' + chg(r.change_7d) + ' in 7 days)'],
-      ['Size curve', '10^(7.2341 + 0.5782 &middot; log10(TVL / $100M)) = ' + money(Math.pow(10, 7.2341 + 0.5782 * Math.log10(r.tvl_usd / 1e8)))],
-      ['Category (' + esc(r.category || 'none') + ')', 'offset applied, fitted on 115 traded tokens'],
+      ['Size curve', '10^(7.2341 + 0.5782 &middot; log10(TVL / $100M)) = ' + money(curveVal)],
+      ['Category (' + esc(r.category || 'none') + ')', (r.cat_offset >= 0 ? '+' : '') + r.cat_offset.toFixed(2) + ' in log10 &rarr; &times;' + catMult.toFixed(2)],
       ['Value if it launches', '<b>' + money(r.value_if_launches) + '</b>'],
       ['Token odds', pct(r.odds) + ' (peers of its age, size and growth: ' + pct(R.held_out.base_rate) + ' ever record one)'],
       ['Implied value', '<b>' + money(r.implied_value_usd) + '</b> &nbsp; P25&ndash;P75 ' + money(r.p25) + '&ndash;' + money(r.p75) + ' &middot; P10&ndash;P90 ' + money(r.p10) + '&ndash;' + money(r.p90)],
       ['Model spread (3 fits)', money(r.spread_lo) + '&ndash;' + money(r.spread_hi) + ' &middot; rank ' + r.rank_lo + '&ndash;' + r.rank_hi + ' across the fits'],
-      ['Tier', r.tier + ' &middot; no token for ' + age(r.age_days) + ' &middot; chains ' + esc(r.chains.join(', '))],
+      ['Tier', r.tier + ' &middot; no token for ' + age(r.age_days) + ' &middot; chains ' + esc(chainsShort)],
     ];
     var matrix = [1000, 3000, 10000, 30000].map(function (d) {
       var s = 0.07 * r.value_if_launches * (d / r.tvl_usd);
@@ -161,7 +165,7 @@
     }).join('');
     $('detailBody').innerHTML =
       '<h3>' + esc(r.name) + '</h3><div class="dsub">Rank ' + r.rank + ' of ' + R.rows.length + ' (rank ' + r.rank_lo + '&ndash;' + r.rank_hi + ' across model fits) &middot; ' +
-      esc(r.category || 'no category') + ' &middot; ' + esc(r.chains.join(', ')) + ' &middot; ' + r.tier + ' &middot; verdict <span class="verdict ' + r.verdict + '">' + r.verdict + '</span></div>' +
+      esc(r.category || 'no category') + ' &middot; ' + esc(chainsShort) + ' &middot; ' + r.tier + ' &middot; verdict <span class="verdict ' + r.verdict + '">' + r.verdict + '</span></div>' +
       '<div class="dgrid"><div><h4>How the figure is made</h4><table>' +
       rows.map(function (x) { return '<tr><td>' + x[0] + '</td><td>' + x[1] + '</td></tr>'; }).join('') +
       '</table><h4 style="margin-top:14px">Nearest traded peers</h4><table><tr><th>Protocol</th><th>TVL</th><th>Market cap</th><th>Cap/TVL</th></tr>' + peers + '</table></div>' +
@@ -183,6 +187,7 @@
   function hideDetail() {
     $('detail').classList.add('hidden');
     $('boardWrap').classList.remove('hidden');
+    document.body.classList.remove('detail-mode');
     if (location.hash) history.replaceState(null, '', location.pathname);
   }
   $('detailClose').addEventListener('click', hideDetail);
@@ -205,11 +210,15 @@
   });
 
   // ---- hash routing (for the three screenshots) ----
-  renderBoard();
-  var m = location.hash.match(/detail=([\w-]+)/);
-  if (m) showDetail(m[1]);
-  if (location.hash.indexOf('view=farm') >= 0) {
-    state.verdict = 'FARM'; state.sort = 'hour'; $('fVerdict').value = 'FARM'; $('fSort').value = 'hour'; renderBoard();
+  function applyHash() {
+    var m = location.hash.match(/detail=([\w-]+)/);
+    if (m) { showDetail(m[1]); return; }
+    if (location.hash.indexOf('view=farm') >= 0) {
+      hideDetail();
+      state.verdict = 'FARM'; state.sort = 'hour'; $('fVerdict').value = 'FARM'; $('fSort').value = 'hour'; renderBoard();
+    }
   }
-  if (location.hash.indexOf('view=method') >= 0) { $('method').scrollIntoView(); }
+  window.addEventListener('hashchange', applyHash);
+  renderBoard();
+  applyHash();
 })();
