@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Launch Radar — pre-token protocols, ranked by implied value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="mast">
+  <div class="mast-top">
+    <div>
+      <div class="kicker">DEFI LLAMA SNAPSHOT &middot; <span id="asOf"></span> &middot; 758 PROTOCOLS</div>
+      <h1>Launch Radar</h1>
+      <p class="sub">Every pre-token protocol, ranked by what its token would be worth if it launched &mdash; and what farming it would actually pay.</p>
+    </div>
+    <div class="model-badge" id="modelBadge"></div>
+  </div>
+  <div class="kpis" id="kpis"></div>
+  <div class="integrity" id="integrity"></div>
+  <div class="accounting" id="accounting"></div>
+</header>
+
+<nav class="filters" id="filters">
+  <label>Verdict
+    <select id="fVerdict"><option value="">All verdicts</option><option>FARM</option><option>MARGINAL</option><option>SKIP</option></select>
+  </label>
+  <label>Tier
+    <select id="fTier"><option value="">All tiers</option><option>Watchlist</option><option>Early</option><option>Off-list</option></select>
+  </label>
+  <label>Category
+    <select id="fCat"><option value="">All categories</option></select>
+  </label>
+  <label>Chain
+    <select id="fChain"><option value="">All chains</option></select>
+  </label>
+  <label>Deposit
+    <select id="fDeposit"><option value="1000">$1,000 plan</option><option value="10000">$10,000 plan</option></select>
+  </label>
+  <label>Sort
+    <select id="fSort"><option value="implied">Implied value</option><option value="net">Net of all costs</option><option value="hour">Net per hour</option><option value="odds">Token odds</option><option value="tvl">TVL</option></select>
+  </label>
+  <label class="search">Search <input id="fSearch" type="search" placeholder="protocol name"></label>
+  <button id="fReset" type="button">Reset</button>
+</nav>
+
+<main>
+  <section id="boardWrap">
+    <div class="section-head"><h2 id="boardTitle">The board</h2><span id="rowCount"></span></div>
+    <p class="hint">Click any row for its full dossier: every step of the valuation, the farm plan with costs and times, and the nearest traded peers. Implied value = value if it launches &times; token odds. Bands are the leave-one-out P25&ndash;P75; the spread is the range across three fits of the size curve.</p>
+    <table id="board">
+      <thead><tr>
+        <th>#</th><th>Protocol</th><th>TVL</th><th>7d</th><th>No token for</th><th>Token odds</th>
+        <th>If it launches</th><th>Implied value</th><th>Verdict</th><th>Net</th><th>Net / hour</th>
+      </tr></thead>
+      <tbody id="boardBody"></tbody>
+    </table>
+  </section>
+
+  <section id="detail" class="hidden">
+    <div class="section-head"><h2 id="detailTitle">Protocol dossier</h2><button id="detailClose" type="button">Back to the board</button></div>
+    <div id="detailBody"></div>
+  </section>
+
+  <section id="method">
+    <h2>How a row is priced &mdash; and what was tested, not kept</h2>
+    <div id="methodBody"></div>
+  </section>
+
+  <section id="live">
+    <h2>Already trading &mdash; the market's own values, not the model's</h2>
+    <p class="hint">The 24 largest traded protocols by market cap. These are the comparables the size curve is fitted on; they are never ranked on the board.</p>
+    <table id="liveTable">
+      <thead><tr><th>Protocol</th><th>TVL</th><th>Market cap</th><th>Cap / TVL</th><th>7d</th></tr></thead>
+      <tbody id="liveBody"></tbody>
+    </table>
+  </section>
+</main>
+
+<footer>
+  <p>Launch Radar radar-2. One day of DefiLlama data cannot say whether or when a token launches: read the board as a ranking and an order of magnitude, not a price. Farm plans are a model of costs, not advice; a protocol on this board may still record a token its DefiLlama record does not carry. Judge: the board, the dossier and this source agree row for row &mdash; recompute any row from the snapshot and the formula above.</p>
+</footer>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
