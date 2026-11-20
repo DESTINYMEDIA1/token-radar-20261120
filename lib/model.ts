@@ -140,6 +140,7 @@ export interface RadarRow {
   tier: 'Watchlist' | 'Early' | 'Off-list';
   odds: number;
   value_if_launches: number;
+  cat_offset: number;
   implied_value_usd: number;
   p25: number;
   p75: number;
@@ -476,6 +477,7 @@ export function radarRow(row: BoardRow, snapshot: Snapshot, all: RadarRow[]): Ra
     tier,
     odds: round4(e.odds),
     value_if_launches: e.value,
+    cat_offset: round4(CAT_OFFSETS[p.category ?? ''] ?? 0),
     implied_value_usd: e.implied,
     p25: band(LOO_Q.p25),
     p75: band(LOO_Q.p75),
@@ -516,7 +518,7 @@ export function buildRadar(snapshot: Snapshot): { board: BoardRow[]; radar: Rada
     tvl_usd: f.tvl_usd, change_7d: f.change_7d, age_days: f.age_days, tier: 'Early' as const,
     odds: 0, value_if_launches: 0, implied_value_usd: f.implied_value_usd, p25: 0, p75: 0, p10: 0, p90: 0,
     spread_lo: f.spread_lo, spread_hi: f.spread_hi, rank_lo: 0, rank_hi: 0, verdict: 'SKIP' as const,
-    net_1k: 0, net_10k: 0, net_hour_1k: 0, breakeven_odds: 0, fees: 0, hours: 0, farm_steps: f.farm_steps,
+    net_1k: 0, net_10k: 0, net_hour_1k: 0, breakeven_odds: 0, fees: 0, hours: 0, farm_steps: f.farm_steps, cat_offset: 0,
   }))));
   const totalImplied = rows.reduce((s, r) => s + r.implied_value_usd, 0);
   const totalTvl = rows.reduce((s, r) => s + r.tvl_usd, 0);
